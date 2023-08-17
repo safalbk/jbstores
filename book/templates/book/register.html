@@ -1,0 +1,44 @@
+{% load static %}
+{% include 'book/main-template.html' %}
+{% block content %}
+<div class="container " style="margin-top: 80px;">
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Balance</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            {% if transactions %}
+            {% for t in transactions %}
+            <tr>
+                <td>{{t.amount}}</td>
+                <td> {{t.date}}</td>
+                <td>{{t.name.name}}</td>
+                {% if t.borrow %}
+                <td> <span style="font-size: 20px; color: red; font-weight: bold;"> {{t.borrow}}
+                </span></td>
+               
+                {% else %}
+                <td>
+                    <span style="font-size: 20px; color: red; font-weight: bold;">
+                    </span>
+                </td>
+               
+                {% endif %}
+            </tr>
+            {% endfor %}
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+</div>
+
+{% endblock %}

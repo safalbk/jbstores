@@ -1,0 +1,95 @@
+{% load static %}
+{% include 'book/main-template.html' %}
+{% block content %}
+<div class="container " style="margin-top: 80px;">
+  <div class="row mb-3 d-flex justify-content-between  ">
+
+    <div class="col">
+      <a class="btn btn-primary" href="{% url 'book:add_purchase' %}" role="button">
+        <i class="bi bi-plus-circle"></i> Add</a>
+    </div>
+    <div class="col">
+     <p style="font-size: 21px;">{{date}}</p>
+    </div>
+    <div class="col">
+      <p style="font-size: 21px;">Total : {{collection}}</p>
+     </div>
+    
+  </div>
+  <div class="row">
+    <div class="col  d-flex justify-content-center ">
+      <ol class="list-group " id="mylist">
+
+
+        {% if transactions %}
+        {% for t in transactions %}
+        <li class="list-group-item d-flex justify-content-between " style="height:65.6px ;">
+          <div class=" me-auto ">
+            <div class="fw-bold">{{t.amount}}</div>
+            
+          </div>
+          <div class=" me-auto ">
+            {{t.date}}
+          </div>
+         
+          <span id="person_name" style="font-size: 20px;"> {{t.name.name}}</span>
+          <div class="me-auto ">
+            {% if t.borrow %}
+             <span style="font-size: 20px; color: red; font-weight: bold;"> {{t.borrow}}
+             </span>
+             {% else %}
+             <span style="font-size: 20px; color: red; font-weight: bold;">
+             </span>
+             {% endif %}
+           </div>
+        </li>
+        {% endfor %}
+
+        {% endif %}
+      </ol>
+    </div>
+
+  </div>
+</div>
+<script>
+const table = document.getElementById('myTable');
+const rows = table.getElementsByTagName('tr');
+
+for (let i = 0; i < rows.length; i++) {
+    rows[i].addEventListener('click', function() {
+        // This function will be executed when a row is clicked
+        console.log(`Clicked on row ${i + 1}`);
+        
+        // You can perform any action you want here
+        // For example, you might want to get data from the row's cells
+        const cells = this.getElementsByTagName('td');
+        console.log('Cell 1:', cells[0].textContent);
+        console.log('Cell 2:', cells[1].textContent);
+    });
+}
+
+  const myList = document.getElementById('mylist');
+
+  // Get all <li> elements within the <ul>
+  const listItems = myList.getElementsByTagName('li');
+
+  // Add a click event listener to each <li> element
+  for (let i = 0; i < listItems.length; i++) {
+    listItems[i].addEventListener('click', function (event) {
+      // This function will be executed when an <li> element is clicked
+      const personName = this.querySelector('span#person_name').textContent;
+      // console.log(`Clicked on: ${this.textContent}`);
+      if(encodeURIComponent(personName.trim())!=""){
+        console.log(encodeURIComponent(personName.trim()));
+      event.preventDefault();  // Prevent the default behavior of the link
+      // const redirectURL = "{% url 'book:single_person_transactions' 'gg' %}".replace('gg', encodeURIComponent(personName.trim()));
+      console.log("{% url 'book:single_person_transactions' 'gg' %}");
+      window.location.href = "{% url 'book:single_person_transactions' 'gg' %}".replace('/gg/', '/' + encodeURIComponent(personName.trim()) + '/');  // Redirect using JavaScript
+
+      }
+      
+      // You can perform any action you want here
+    });
+  }
+</script>
+{% endblock %}

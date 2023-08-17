@@ -1,0 +1,108 @@
+{% load static %}
+{% include 'book/main-template.html' %}
+{% block content %}
+<style>
+  #autocomplete {
+    width: 300px;
+    padding: 5px;
+  }
+
+  #suggestions {
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+  }
+
+  .suggestion {
+    padding: 5px;
+    cursor: pointer;
+  }
+</style>
+<div class="container " style="margin-top: 80px;">
+
+  <div class="row mb-3">
+
+    <div class="col">
+      <a class="btn btn-primary" href="{% url 'book:index' %}" role="button">
+        <i class="bi bi-arrow-left-circle"></i> back</a>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <form action="{% url 'book:add_purchase' %}" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+
+          <label for="numberInput" class="form-label">Amount</label>
+          <input type="number" class="form-control" id="numberInput" name="amount">
+
+
+        </div>
+        <div class="mb-3">
+
+          <label for="numberInput" class="form-label">Borrow</label>
+          <input type="number" class="form-control" id="numberInput" name="borrow">
+
+
+        </div>
+        <div class="mb-3">
+          <label for="numberInput" class="form-label">Name</label>
+
+          <input class="form-control" type="text" id="autocomplete" name="name" placeholder="Name"
+            aria-label="default input example">
+          <div id="suggestions"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Save</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+<script>
+  const input = document.getElementById('autocomplete');
+  const suggestionsContainer = document.getElementById('suggestions');
+  var contextData = {{ persons|safe }};
+  const suggestions = [ ];
+
+  for (var i = 0; i < contextData.length; i++) {
+    // console.log(contextData[i]["names"]);
+  suggestions.push(contextData[i]["names"])
+}
+ 
+  input.addEventListener('input', function () {
+    const inputValue = input.value.toLowerCase();
+    const filteredSuggestions = suggestions.filter(suggestion =>
+      suggestion.toLowerCase().includes(inputValue)
+    );
+
+    if (filteredSuggestions.length > 0) {
+      suggestionsContainer.style.display = 'block';
+      suggestionsContainer.innerHTML = '';
+
+      filteredSuggestions.forEach(suggestion => {
+        const suggestionElement = document.createElement('div');
+        suggestionElement.classList.add('suggestion');
+        suggestionElement.textContent = suggestion;
+
+        suggestionElement.addEventListener('click', function () {
+          input.value = suggestion;
+          suggestionsContainer.style.display = 'none';
+        });
+
+        suggestionsContainer.appendChild(suggestionElement);
+      });
+    } else {
+      suggestionsContainer.style.display = 'none';
+    }
+  });
+
+  document.addEventListener('click', function (event) {
+    if (!input.contains(event.target) && !suggestionsContainer.contains(event.target)) {
+      suggestionsContainer.style.display = 'none';
+    }
+  });
+</script>
+{% endblock %}
