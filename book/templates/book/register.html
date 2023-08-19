@@ -1,44 +1,98 @@
 {% load static %}
 {% include 'book/main-template.html' %}
 {% block content %}
+
+<head>
+    <style>
+        .input-group-append {
+            cursor: pointer;
+        }
+    </style>
+</head>
 <div class="container " style="margin-top: 80px;">
-    <table id="example" class="display" style="width:100%">
-        <thead>
-            <tr>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Balance</th>
+    <div class="row mb-3">
+        <div class="col text-center">
+           <p style="font-size: medium;"> {{ date|date:"d-m-Y" }}</p>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col ">
+            <form action="{% url 'book:register' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="previous" value="true">
+                <input type="hidden" name="next" value="false">
 
-            </tr>
-        </thead>
-        <tbody>
+                <input type="hidden" id="date" name="date" value='{{date|date:"d-m-Y" }}'>
 
-            {% if transactions %}
-            {% for t in transactions %}
-            <tr>
-                <td>{{t.amount}}</td>
-                <td> {{t.date}}</td>
-                <td>{{t.name.name}}</td>
-                {% if t.borrow %}
-                <td> <span style="font-size: 20px; color: red; font-weight: bold;"> {{t.borrow}}
-                </span></td>
-               
-                {% else %}
-                <td>
-                    <span style="font-size: 20px; color: red; font-weight: bold;">
-                    </span>
-                </td>
-               
+                <button type="submit" class="btn btn-primary float-start"><i class="bi bi-arrow-left"></i></button>
+
+            </form>
+
+        </div>
+        <div class="col">
+            <form action="{% url 'book:register' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="false">
+                <input type="hidden" name="previous" value="false">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" value="{{ date|date:'Y-m-d' }}">
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+        </div>
+        <div class="col  me-auto">
+            <form action="{% url 'book:register' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="true">
+                <input type="hidden" name="previous" value="false">
+                <input type="hidden" id="date" name="date" value='{{date|date:"d-m-Y" }}'>
+                <button type="submit" class="btn btn-primary float-end"><i class="bi bi-arrow-right"></i></button>
+
+            </form>
+        </div>
+    </div>
+        <table id="example" class="display" style="width:100%;font-size: 15px; table-layout: auto;">
+            <thead>
+                <tr>
+                    <th >Amount</th>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Balance</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                {% if transactions %}
+                {% for t in transactions %}
+                <tr>
+                    <td >{{t.amount}}</td>
+                    <td> {{t.date}}</td>
+                    <td>{{t.name.name}}</td>
+                    {% if t.borrow %}
+                    <td> <span style="font-size: 20px; color: red; font-weight: bold;"> {{t.borrow}}
+                        </span></td>
+
+                    {% else %}
+                    <td>
+                        <span style="font-size: 20px; color: red; font-weight: bold;">
+                        </span>
+                    </td>
+
+                    {% endif %}
+                </tr>
+                {% endfor %}
+
                 {% endif %}
-            </tr>
-            {% endfor %}
 
-            {% endif %}
+            </tbody>
 
-        </tbody>
+        </table>
+        <script defer>
+            $(function () {
+                $('#datepicker').datepicker();
+            });
+        </script>
 
-    </table>
-</div>
+    </div>
 
-{% endblock %}
+    {% endblock %}

@@ -6,6 +6,9 @@ from django.shortcuts import render, get_object_or_404,redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from datetime import datetime
 from datetime import date
+from datetime import  timedelta
+
+# Get the current date
 
 
 def index(request):
@@ -22,8 +25,39 @@ def index(request):
 	return render(request,"book/index.html",context)
 
 def register(request):
+	if request.method == "POST":
+		current_date = datetime.now()
+
+		date=request.POST["date"]
+		print("date id .....",date)
+		date_string = date
+		date_format = "%d-%m-%Y"
+
+		# Convert the date string to a date object
+		date = datetime.strptime(date_string, date_format).date()
+		print("converted date id .....",date)
+
+		next = request.POST["next"]
+		previous = request.POST["previous"]
+
+		if previous == "true":
+			date = date - timedelta(days=1)
+			print("Previous date:", date)
+
+		if next == "true":
+			date = date + timedelta(days=1)
+			print("Next date:", date)
+
+		all_transactions = Transactions.objects.filter(date__icontains=date).order_by("-date")
+		context ={
+			"date":date,
+			"transactions" :all_transactions,
+		}
+		return render(request,"book/register.html",context)
 	all_transactions = Transactions.objects.all().order_by("-date")
+	date = datetime.now()
 	context ={
+		"date":date,
 		"transactions" :all_transactions,
 	}
 	return render(request,"book/register.html",context)
