@@ -72,6 +72,7 @@ def allperson(request):
 			print(p.name,t.borrow)
 			total=total+t.borrow
 		persons_data.append({
+			"id":p.id,
 			"name":p.name,
 			"borrow":total,
 
@@ -117,6 +118,28 @@ def add_person(request):
 		p = Persons(name=name,address=address,phone=phone)
 		p.save()
 	return render(request,"book/add_person.html")
+
+def edit_person(request,p_id):
+	if request.method == "POST":
+		o_p =Persons.objects.get(pk=p_id)
+		name=request.POST["name"]
+		address=request.POST["address"]
+		phone=request.POST["phone"]
+		o_p =Persons.objects.get(pk=p_id)
+		o_p.name= name
+		o_p.address= address
+		o_p.phone = phone
+		o_p.save()
+		return redirect('book:allperson')
+
+	o_p =Persons.objects.get(pk=p_id)
+	context ={
+		"id":p_id,
+		"name":o_p.name,
+		"address":o_p.address,
+		"phone":o_p.phone
+	}
+	return render(request,"book/edit_person.html",context)
 
 
 def single_person_transactions(request,name):

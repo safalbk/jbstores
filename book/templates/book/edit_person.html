@@ -1,0 +1,44 @@
+
+{% load static %}
+{% include 'book/main-template.html' %}
+{% block content %}
+<div class="container " style="margin-top: 80px;">
+    <div class="row">
+
+        <!-- <div class="col">
+            <button type="button" class="btn btn-primary  ">
+                <i class="bi bi-plus-circle"></i> Save</button>
+        </div>
+ -->
+
+    </div>
+    <div class="row">
+        <div class="col">
+            <form action="{% url 'book:edit_person' id %}" method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="numberInput" class="form-label">Name</label>
+
+                    <input class="form-control" type="text" placeholder="Default input" name="name" value="{{name}}"
+                    aria-label="default input example">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Address</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" name="address"  value="{{address}}" rows="3"></textarea>
+                  </div>
+                <div class="mb-3">
+                    
+                    <label for="numberInput" class="form-label">Mobile</label>
+                    <input type="number" class="form-control"  name="phone" value="{{phone}}"  placeholder="+91">
+
+                   
+                </div>
+                
+                <button type="submit" class="btn btn-primary mt-3">Save</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

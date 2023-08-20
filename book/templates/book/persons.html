@@ -36,6 +36,15 @@
             "href="{% url 'book:single_person_transactions' p.name %}" role="button">
               <i class="bi bi-arrow-up-square"></i> Open</a>
 
+
+              <a style="height: 40px; text-decoration: none; width: 75px;
+              border: 1px solid black;align-items: center;
+              margin-left: 10px;
+              padding: 5px;
+              border-radius: 3px;
+              color: black;
+              "href="{% url 'book:edit_person' p.id %}" role="button">
+                <i class="bi bi-pen"></i> edit</a>
           </div>
           <span style="font-size: 20px;"></span>
         </li>
