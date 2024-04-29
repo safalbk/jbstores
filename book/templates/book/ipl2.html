@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPL Match Scheduler</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 10px;
+    }
+    input[type="text"], input[type="number"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+    button {
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    h2, h3, h4 {
+        text-align: center;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    li {
+        margin-bottom: 5px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+</style>
+</head>
+<body>
+<h2>IPL Match Scheduler</h2>
+<div>
+    <label for="teamName">Team Name:</label>
+    <input type="text" id="teamName">
+    <button onclick="addTeam()">Add Team</button>
+</div>
+<div>
+    <h3>Teams</h3>
+    <ul id="teamList"></ul>
+</div>
+<div>
+    <button onclick="generateSchedule()">Generate Schedule</button>
+</div>
+<div id="matchSchedule"></div>
+<div id="pointsTable"></div>
+
+<script>
+    let teams = [];
+    let matches = [];
+    let pointsTable = {};
+
+    function addTeam() {
+        let teamName = document.getElementById("teamName").value;
+        if (teamName.trim() === "") {
+            alert("Please enter a team name.");
+            return;
+        }
+        teams.push({ name: teamName, points: 0 });
+        document.getElementById("teamName").value = "";
+        displayTeams();
+    }
+
+    function displayTeams() {
+        let teamList = document.getElementById("teamList");
+        teamList.innerHTML = "";
+        teams.forEach(team => {
+            let li = document.createElement("li");
+            li.textContent = team.name;
+            teamList.appendChild(li);
+        });
+    }
+
+    function generateSchedule() {
+        matches = [];
+        let matchups = [];
+        for (let i = 0; i < teams.length; i++) {
+            for (let j = i + 1; j < teams.length; j++) {
+                matchups.push([teams[i].name, teams[j].name]);
+            }
+        }
+        shuffle(matchups);
+
+        let rounds = teams.length - 1;
+        let matchesPerRound = matchups.length / rounds;
+
+        for (let i = 0; i < rounds; i++) {
+            let roundMatches = matchups.slice(i * matchesPerRound, (i + 1) * matchesPerRound);
+            matches.push(roundMatches);
+        }
+        displaySchedule();
+    }
+
+    function displaySchedule() {
+        let matchSchedule = document.getElementById("matchSchedule");
+        matchSchedule.innerHTML = "<h3>Match Schedule</h3>";
+        matches.forEach((round, index) => {
+            matchSchedule.innerHTML += `<h4>Round ${index + 1}</h4>`;
+            round.forEach((match, matchIndex) => {
+                matchSchedule.innerHTML += `Match ${matchIndex + 1}: ${match[0]} vs ${match[1]}<br>`;
+            });
+        });
+        updatePointsTable();
+    }
+
+    function updatePointsTable() {
+        pointsTable = {};
+        teams.forEach(team => pointsTable[team.name] = team.points);
+
+        let pointsTableDiv = document.getElementById("pointsTable");
+        pointsTableDiv.innerHTML = "<h3>Points Table</h3>";
+        let table = "<table><tr><th>Team</th><th>Points</th><th>Score</th></tr>";
+        for (let team in pointsTable) {
+            table += `<tr><td>${team}</td><td><input type="number" id="${team}_points" value="${pointsTable[team]}" onchange="updatePoints('${team}')"></td><td><input type="number" id="${team}_score" value="0" onchange="updateScore('${team}')"></td></tr>`;
+        }
+        table += "</table>";
+        pointsTableDiv.innerHTML += table;
+    }
+
+    function updatePoints(team) {
+        let points = parseInt(document.getElementById(`${team}_points`).value);
+        if (!isNaN(points)) {
+            teams.find(t => t.name === team).points = points;
+        }
+    }
+
+    function updateScore(team) {
+        let score = parseInt(document.getElementById(`${team}_score`).value);
+        if (!isNaN(score)) {
+            // Additional logic for updating the score can be added here if needed.
+        }
+    }
+
+    // Fisher-Yates (aka Knuth) Shuffle
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPL Match Scheduler</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 10px;
+    }
+    input[type="text"], input[type="number"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+    button {
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    h2, h3, h4 {
+        text-align: center;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    li {
+        margin-bottom: 5px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+    }
+</style>
+</head>
+<body>
+<h2>IPL Match Scheduler</h2>
+<div>
+    <form method="post">
+        {% csrf_token %}
+        <label for="teamName">Team Name:</label>
+        <input type="text" id="teamName" name="teamName">
+        <button type="submit">Add Team</button>
+    </form>
+</div>
+<div>
+    <h3>Teams</h3>
+    <ul>
+        {% for team in teams %}
+        <li>{{ team.name }}</li>
+        {% endfor %}
+    </ul>
+</div>
+<div>
+    <button onclick="generateSchedule()">Generate Schedule</button>
+</div>
+<div id="matchSchedule">
+    <h3>Match Schedule</h3>
+    <ul>
+        {% for match in matches %}
+        <li>{{ match.team1 }} vs {{ match.team2 }}</li>
+        {% endfor %}
+    </ul>
+</div>
+<div id="pointsTable">
+    <h3>Points Table</h3>
+    <table>
+        <tr>
+            <th>Team</th>
+            <th>Points</th>
+            <th>Score</th>
+        </tr>
+        {% for team in teams %}
+        <tr>
+            <td>{{ team.name }}</td>
+            <td><input type="number" name="{{ team.name }}_points" value="{{ team.points }}"></td>
+            <td><input type="number" name="{{ team.name }}_score" value="0"></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

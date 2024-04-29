@@ -28,11 +28,14 @@
         <i class="bi bi-arrow-left-circle"></i> back</a>
 
     </div>
+   
   </div>
   <div class="row">
     <div class="col">
       <form action="{% url 'book:add_purchase' %}" method="POST">
         {% csrf_token %}
+        <button type="submit" class="btn btn-primary mt-3">Save</button>
+
         <div class="mb-3">
 
           <label for="numberInput" class="form-label">Amount</label>
@@ -42,7 +45,7 @@
         </div>
         <div class="mb-3">
 
-          <label for="numberInput" class="form-label">Borrow</label>
+          <label for="numberInput" class="form-label">Borrow [kadam]</label>
           <input type="number" class="form-control" id="numberInput" name="borrow">
 
 

@@ -17,6 +17,8 @@ urlpatterns = [
     path("single_person_transactions/<str:name>/", views.single_person_transactions, name="single_person_transactions"),
     path("register/", views.register, name="register"),
     path("calculator/", views.calculator, name="calculator"),
+        path("ipl/", views.ipl, name="ipl"),
+
 
     # path("quizrd_login", views.quizrd_login, name="quizrd_login"),
 ]

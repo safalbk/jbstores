@@ -24,3 +24,25 @@ class Transactions(models.Model):
 
 	def __str__(self):
 		return str(self.id)
+	
+
+class Ipl(models.Model):
+	name = models.CharField(max_length=300)#,validators=[alphanumeric]
+	data = models.CharField(max_length=1000)#,validators=[alphanumeric]
+
+	def __str__(self):
+		return str(self.id)
+	
+class Team(models.Model):
+    name = models.CharField(max_length=100)
+    points = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
+
+class Match(models.Model):
+    team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='matches_as_team1')
+    team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='matches_as_team2')
+
+    def __str__(self):
+        return f"{self.team1} vs {self.team2}"

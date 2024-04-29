@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Persons, Transactions
+from .models import Persons, Transactions,Team, Match
 import json
 # Create your views here.
 from django.shortcuts import render, get_object_or_404,redirect
@@ -206,3 +206,23 @@ def single_person_transactions(request,name):
 def calculator(request):
 	
 	return render(request,"book/calculator.html")
+
+
+
+ 
+def ipl(request):
+	# if request.method == 'POST':
+	# # Handle form submission to create teams, generate schedule, and save data
+	# 	team_name = request.POST.get('teamName')
+	# 	if team_name:
+	# 		# Create a new team instance
+	# 		new_team = Team.objects.create(name=team_name)
+	# 		new_team.save()
+
+	# # Redirect to the same page after processing the form submission
+	# 	return redirect('/ipl')
+	# else:
+	# 	teams = Team.objects.all()
+	# 	matches = Match.objects.all()
+		# return render(request,"book/ipl.html", {'teams': teams, 'matches': matches})
+		return render(request,"book/ipl2.html",)
