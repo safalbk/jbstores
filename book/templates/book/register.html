@@ -22,7 +22,7 @@
                 <input type="hidden" name="previous" value="true">
                 <input type="hidden" name="next" value="false">
 
-                <input type="hidden" id="date" name="date" value='{{date|date:"d-m-Y" }}'>
+                <input type="hidden" id="date" name="date" value="{{ date|date:'Y-m-d' }}">
 
                 <button type="submit" class="btn btn-primary float-start"><i class="bi bi-arrow-left"></i></button>
 
@@ -44,7 +44,7 @@
                 {% csrf_token %}
                 <input type="hidden" name="next" value="true">
                 <input type="hidden" name="previous" value="false">
-                <input type="hidden" id="date" name="date" value='{{date|date:"d-m-Y" }}'>
+                <input type="hidden" id="date" name="date" value="{{ date|date:'Y-m-d' }}">
                 <button type="submit" class="btn btn-primary float-end"><i class="bi bi-arrow-right"></i></button>
 
             </form>

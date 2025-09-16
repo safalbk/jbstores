@@ -31,7 +31,8 @@ def register(request):
 		date=request.POST["date"]
 		print("date id .....",date)
 		date_string = date
-		date_format = "%d-%m-%Y"
+		date_format = "%Y-%m-%d"  # HTML <input type="date"> format
+
 
 		# Convert the date string to a date object
 		date = datetime.strptime(date_string, date_format).date()
@@ -86,18 +87,26 @@ def allperson(request):
 
 def add_purchase(request):
 	if request.method == "POST":
-		name=request.POST["name"]
-		amount=request.POST["amount"]
-		borrow=request.POST["borrow"]
-		if name=="":
-			t = Transactions(amount=amount)
-			t.save()
-		else:
-			t = Transactions(name=Persons.objects.get(name=name),amount=amount,borrow=-int(borrow))
-			t.save()
-		return redirect('book:index')
+			name = request.POST.get("name", "").strip()
+			amount = request.POST.get("amount")
+			borrow = request.POST.get("borrow", 0)
 
-		# print(request.POST["name"] ,request.POST["amount"])
+			if name == "":
+				# No person provided, just save transaction
+				t = Transactions(amount=amount)
+			else:
+				# Get existing person or create a new one
+				person, created = Persons.objects.get_or_create(name=name)
+				# created = True if new person was created
+
+				t = Transactions(
+					name=person,
+					amount=amount,
+					borrow=-int(borrow)
+				)
+
+			t.save()
+			return redirect('book:index')
 
 	names=[]
 	pp = Persons.objects.all()
@@ -203,6 +212,67 @@ def single_person_transactions(request,name):
 		"transaction_object":t_all
 	}
 	return render(request,"book/single_person_transactions.html",context)
+def personlist(request,name):
+	if request.method == "POST":
+
+		amount=int(request.POST["amount"])
+		print("amount is ",amount)
+		p=Persons.objects.get(name=name)
+		t_all= Transactions.objects.filter(name=p)
+		for t in t_all:
+			cur_borrow =int(t.borrow)
+			print("curent borrow ",cur_borrow)
+			if amount == 0:
+				break
+
+			if (cur_borrow<0):
+				if ((amount + cur_borrow)>0):
+					amount = amount + cur_borrow
+					t.borrow = 0
+					print("condi > ",t.borrow)
+					t.save()
+					continue
+
+				if ((amount + cur_borrow)==0):
+					amount = amount + cur_borrow
+					t.borrow = 0
+					print("condi == ",t.borrow)
+					t.save()
+					break
+
+				if ((amount + cur_borrow)<0):
+					t.borrow = amount + cur_borrow
+					amount = 0
+					print("condi < ",t.borrow)
+					t.save()
+					break
+
+
+	p=Persons.objects.get(name=name)
+	t_all= Transactions.objects.filter(name=p).order_by('-date')
+	transactions = []
+	for t in t_all:
+		# print(t.amount)
+		paid =0
+		if int(t.borrow)<0:
+			paid =0
+		else:
+			paid =1
+			
+		transactions.append({
+			"date":t.date,
+			"amount":t.amount,
+			"borrow":t.borrow,
+			"paid":paid
+		})
+	
+	context={
+		"name":p.name,
+		"balance":p.account_balance,
+		"transactions":transactions,
+		"transaction_object":t_all
+	}
+	return render(request,"book/person/single_person_transactions.html",context)
 def calculator(request):
 	
 	return render(request,"book/calculator.html")

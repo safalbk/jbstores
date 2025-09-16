@@ -32,34 +32,53 @@
   </div>
   <div class="row">
     <div class="col">
-      <form action="{% url 'book:add_purchase' %}" method="POST">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary mt-3">Save</button>
+      <form id="purchaseForm" action="{% url 'book:add_purchase' %}" method="POST">
+    {% csrf_token %}
 
-        <div class="mb-3">
+    <div class="mb-3">
+        <label for="amountInput" class="form-label">Amount</label>
+        <input type="number" class="form-control" id="amountInput" name="amount" required>
+    </div>
 
-          <label for="numberInput" class="form-label">Amount</label>
-          <input type="number" class="form-control" id="numberInput" name="amount">
+    <div class="mb-3">
+        <label for="borrowInput" class="form-label">Borrow [kadam]</label>
+        <input type="number" class="form-control" id="borrowInput" name="borrow">
+    </div>
 
+    <div class="mb-3">
+        <label for="nameInput" class="form-label">Name</label>
+        <input class="form-control"
+               type="text"
+               id="nameInput"
+               name="name"
+               placeholder="Name"
+               autocomplete="off">
+        <div id="suggestions"></div>
+    </div>
 
-        </div>
-        <div class="mb-3">
+    <button type="submit" class="btn btn-primary mt-3">Save</button>
+</form>
 
-          <label for="numberInput" class="form-label">Borrow [kadam]</label>
-          <input type="number" class="form-control" id="numberInput" name="borrow">
+<script>
+document.getElementById("purchaseForm").addEventListener("submit", function(event) {
+    const amount = document.getElementById("amountInput").value.trim();
+    const borrow = document.getElementById("borrowInput").value.trim();
+    const name = document.getElementById("nameInput").value.trim();
 
+    if (!amount) {
+        alert("Amount is required!");
+        event.preventDefault();
+        return;
+    }
 
-        </div>
-        <div class="mb-3">
-          <label for="numberInput" class="form-label">Name</label>
+    if (borrow && !name) {
+        alert("Name is required if borrow is filled!");
+        event.preventDefault();
+        return;
+    }
+});
+</script>
 
-          <input class="form-control" type="text" id="autocomplete" name="name" placeholder="Name"
-            aria-label="default input example">
-          <div id="suggestions"></div>
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-3">Save</button>
-      </form>
     </div>
   </div>
 

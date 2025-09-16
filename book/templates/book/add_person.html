@@ -14,29 +14,32 @@
     </div>
     <div class="row">
         <div class="col">
-            <form action="{% url 'book:add_person' %}" method="POST">
-                {% csrf_token %}
+                    <form action="{% url 'book:add_person' %}" method="POST">
+            {% csrf_token %}
 
-                <div class="mb-3">
-                    <label for="numberInput" class="form-label">Name</label>
+            <div class="mb-3">
+                <label for="nameInput" class="form-label">Name</label>
+                <input class="form-control" type="text" name="name" placeholder="Enter name"
+                    aria-label="Name" id="nameInput" required>
+            </div>
 
-                    <input class="form-control" type="text" placeholder="Default input" name="name"
-                    aria-label="default input example">
-                </div>
-                <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Address</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" name="address" rows="3"></textarea>
-                  </div>
-                <div class="mb-3">
-                    
-                    <label for="numberInput" class="form-label">Mobile</label>
-                    <input type="number" class="form-control"  name="phone" placeholder="+91">
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Address</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1"
+                        name="address" rows="3"></textarea>
+            </div>
 
-                   
-                </div>
-                
-                <button type="submit" class="btn btn-primary mt-3">Save</button>
-            </form>
+            <div class="mb-3">
+                <label for="phoneInput" class="form-label">Mobile</label>
+                <input type="number" class="form-control" name="phone" id="phoneInput" placeholder="+91">
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3">Save</button>
+            <a class="btn btn-primary mt-3" href="{% url 'book:allperson' %}" role="button">
+                <i class="bi bi-arrow-left-circle"></i> Back
+            </a>
+        </form>
+
         </div>
     </div>
 
